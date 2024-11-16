@@ -1,3 +1,5 @@
+# .github/workflows/ci.yml
+
 name: CI/CD Pipeline
 
 on:
@@ -8,17 +10,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # 检出代码
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Checkout 代码
+      - uses: actions/checkout@v3
 
-      # 设置 Node.js
+      # 设置 Node.js 版本
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.18.0
+          node-version: "16"
 
       # 安装依赖
       - name: Install dependencies
@@ -28,15 +28,17 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # 运行测试
-      # - name: Run tests
-      #   run: npm test
-
-      # 发送状态到 Dashboard API
-      - name: Send status to Dashboard API
+      # 发送通知到 Discord 和 API
+      - name: Send failure notification on error
+        if: failure()
         env:
-          DASHBOARD_URL: https://your-project.vercel.app/api/status
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
         run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{"stage":"Build","status":"Success","logs":"All tests passed!"}' \
-          $DASHBOARD_URL
+          MESSAGE="Build failed on branch ${{ github.ref }}"
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $API_KEY" \
+            -d "{\"stage\": \"Build\", \"status\": \"Failure\", \"logs\": \"$MESSAGE\"}" \
+            https://yourdomain.com/api/status
