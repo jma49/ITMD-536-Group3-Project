@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 设置 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 构建项目
+      - name: Build project
+        run: npm run build
+
+      # 运行测试
+      - name: Run tests
+        run: npm test
+
+      # 发送状态到 Dashboard API
+      - name: Send status to Dashboard API
+        env:
+          DASHBOARD_URL: https://your-project.vercel.app/api/status
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"stage":"Build","status":"Success","logs":"All tests passed!"}' \
+          $DASHBOARD_URL
