@@ -53,5 +53,5 @@ jobs:
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "x-api-key: $API_KEY" \
-            -d "{\"stage\": \"Build\", \"status\": \"Failure\", \"logs\": \"$MESSAGE\"}" \
+            -d "{\"stage\": \"Build\", \"status\": \"Success\", \"logs\": \"$MESSAGE\"}" \
             https://itmd-536-group3-project.vercel.app/api/status
