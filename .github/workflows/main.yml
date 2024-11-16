@@ -43,8 +43,7 @@ jobs:
             -d "{\"stage\": \"Build\", \"status\": \"Failure\", \"logs\": \"$MESSAGE\"}" \
             https://itmd-536-group3-project.vercel.app/api/status
         
-      - name: Send success notification on error        
-        if: success()
+      - name: Send success notification
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           API_KEY: ${{ secrets.API_KEY }}
