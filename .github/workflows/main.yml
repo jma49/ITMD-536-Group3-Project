@@ -41,4 +41,18 @@ jobs:
             -H "Content-Type: application/json" \
             -H "x-api-key: $API_KEY" \
             -d "{\"stage\": \"Build\", \"status\": \"Failure\", \"logs\": \"$MESSAGE\"}" \
-            https://yourdomain.com/api/status
+            https://itmd-536-group3-project.vercel.app/api/status
+        
+      - name: Send success notification on error        
+        if: success()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          MESSAGE="✅ Build succeeded on branch '${{ github.ref }}'."
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "x-api-key: $API_KEY" \
+            -d "{\"stage\": \"Build\", \"status\": \"Failure\", \"logs\": \"$MESSAGE\"}" \
+            https://itmd-536-group3-project.vercel.app/api/status
