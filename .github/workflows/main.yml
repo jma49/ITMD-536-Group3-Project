@@ -26,6 +26,8 @@ jobs:
 
       # 构建项目
       - name: Build project
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
         run: npm run build
 
       # 发送通知到 Discord 和 API
