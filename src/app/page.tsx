@@ -34,35 +34,67 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1>CI/CD Dashboard</h1>
-      {ciStatus.length > 0 ? (
-        ciStatus.map((status) => (
-          <div
-            key={status._id}
-            style={{
-              border: '1px solid #ddd',
-              padding: '10px',
-              margin: '10px 0',
-              borderRadius: '5px',
-              backgroundColor: status.status === 'Success' ? '#e0f7e9' : '#fce4e4',
-            }}
-          >
-            <h2>{status.stage}</h2>
-            <p>
-              <strong>Status:</strong> {status.status}
-            </p>
-            <p>
-              <strong>Logs:</strong> {status.logs}
-            </p>
-            <p>
-              <strong>Time:</strong> {new Date(status.time).toLocaleString()}
-            </p>
-          </div>
-        ))
-      ) : (
-        <p>Loading CI/CD status...</p>
-      )}
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
+          CI/CD Dashboard
+        </h1>
+        
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {ciStatus.length > 0 ? (
+            ciStatus.map((status) => (
+              <div
+                key={status._id}
+                className={`
+                  overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl
+                  ${status.status === 'Success' 
+                    ? 'bg-white border-t-4 border-green-500' 
+                    : 'bg-white border-t-4 border-red-500'}
+                `}
+              >
+                <div className="px-6 py-4 border-b border-gray-100">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      {status.stage}
+                    </h2>
+                    <span
+                      className={`
+                        px-3 py-1 rounded-full text-sm font-medium
+                        ${status.status === 'Success'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-red-100 text-red-800'}
+                      `}
+                    >
+                      {status.status}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="px-6 py-4">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-medium text-gray-500 mb-2">
+                      log information
+                    </h3>
+                    <div className="bg-gray-50 rounded-md p-3 font-mono text-sm text-gray-600 break-words">
+                      {status.logs}
+                    </div>
+                  </div>
+                  
+                  <div className="text-right text-sm text-gray-500">
+                    {new Date(status.time).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
+              <p className="text-gray-500">加载中...</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
+
