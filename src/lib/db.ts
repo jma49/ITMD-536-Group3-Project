@@ -2,25 +2,25 @@
 
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
-}
-
-let isConnected = false; // 连接状态
+let isConnected = false; 
 
 export async function connectToDatabase() {
   if (isConnected) {
     return;
   }
 
+  const MONGODB_URI = process.env.MONGODB_URI;
+
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable');
+  }
+
   try {
-    await mongoose.connect(MONGODB_URI as string);
+    await mongoose.connect(MONGODB_URI);
     isConnected = true;
-    console.log('success connect to database');
+    console.log('Successfully connected to database');
   } catch (error) {
-    console.error('connect to database error:', error);
+    console.error('Failed to connect to database:', error);
     throw error;
   }
 }
