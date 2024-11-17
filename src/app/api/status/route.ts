@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-let ciStatus: { stage: string; status: string; logs: string; time: string }[] = [];
+import { connectToDatabase } from '@/lib/db';
+import CIStatus from '@/models/CIStatus';
 const API_KEY = process.env.API_KEY;
 
 if (!API_KEY) {
@@ -8,12 +8,20 @@ if (!API_KEY) {
 }
 
 export async function GET() {
-  console.log('Current CI/CD Status:', ciStatus);
-  return NextResponse.json({
-    success: true,
-    data: ciStatus,
-    count: ciStatus.length,
-  });
+  try {
+    await connectToDatabase();
+    // Fetch the latest 10 CI/CD statuses from the database
+    const statuses = await CIStatus.find().sort({ time: -1 }).limit(10);
+    return NextResponse.json({
+      success: true,
+      data: statuses,
+      count: statuses.length,
+    });
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    return NextResponse.json({ message: 'Failed to fetch data', error: errorMessage }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -30,21 +38,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: 'Invalid request body' }, { status: 400 });
     }
 
-    ciStatus.push({
+    await connectToDatabase();
+
+    // Create a new CIStatus document and save it to the database
+    const ciStatus = new CIStatus({
       stage,
       status,
       logs,
-      time: new Date().toISOString(),
+      time: new Date(),
     });
 
-    if (ciStatus.length > 10) {
-      ciStatus = ciStatus.slice(-10);
-    }
+    await ciStatus.save();
 
-    console.log('Updated CI/CD Status:', ciStatus);
+    console.log('New CI/CD Status saved:', ciStatus);
     return NextResponse.json({ message: 'Status updated' });
   } catch (error) {
     console.error('Error processing POST request:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    return NextResponse.json({ message: 'Internal Server Error', error: errorMessage }, { status: 500 });
   }
 }
