@@ -69,7 +69,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           API_KEY: ${{ secrets.API_KEY }}
         run: |
-          MESSAGE="✅ Build Succeeded: Branch '${{ github.ref_name }}'\nCommit: ${{ github.sha }}'\nAuthor: ${{ github.actor }}\n\nDeployed to Vercel: https://${{ secrets.VERCEL_PROJECT_DOMAIN }}\n\nView CI/CD Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          MESSAGE="✅ Build Succeeded: Branch '${{ github.ref_name }}'\nCommit: ${{ github.sha }}'\nAuthor: ${{ github.actor }}\n\nDeployed to Vercel: ${{ secrets.VERCEL_PROJECT_DOMAIN }}\n\nView CI/CD Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
           curl -X POST \
             -H "Content-Type: application/json" \
