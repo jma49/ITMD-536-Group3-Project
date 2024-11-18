@@ -13,21 +13,33 @@ type CIStatus = {
 export default function Home() {
   const [ciStatus, setCIStatus] = useState<CIStatus[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api/status');
-        const data = await response.json();
-        if (data.success) {
-          setCIStatus(data.data);
-        } else {
-          console.error('Failed to fetch CI/CD status:', data.message);
-        }
-      } catch (error) {
-        console.error('Error fetching CI/CD status:', error);
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/status');
+      // Check if response is valid and includes the json() method
+      if (!response || typeof response.json !== 'function') {
+        throw new Error('Invalid response format');
       }
-    };
+  
+      const data = await response.json();
+  
+      // Validate the data structure before setting state
+      if (data && data.success && Array.isArray(data.data)) {
+        setCIStatus(data.data);
+      } else {
+        throw new Error('Invalid data structure');
+      }
+    } catch (error) {
+      // Check if the error is an instance of Error
+      if (error instanceof Error) {
+        console.warn('Failed to fetch CI/CD statuses:', error.message);
+      } else {
+        console.warn('An unexpected error occurred:', error);
+      }
+    }
+  };
 
+  useEffect(() => {
     fetchData();
     const interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
     return () => clearInterval(interval);

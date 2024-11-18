@@ -19,7 +19,7 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Failed to fetch data:', error);
-    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ message: 'Failed to fetch data', error: errorMessage }, { status: 500 });
   }
 }
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Status updated' });
   } catch (error) {
     console.error('Error processing POST request:', error);
-    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json({ message: 'Internal Server Error', error: errorMessage }, { status: 500 });
   }
 }
