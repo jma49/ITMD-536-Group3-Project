@@ -11,6 +11,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@microsoft/eslint-formatter-sarif": "^3.1.0",
     "@types/mongoose": "^5.11.96",
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.1",
