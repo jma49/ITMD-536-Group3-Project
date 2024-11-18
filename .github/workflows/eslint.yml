@@ -57,12 +57,27 @@ jobs:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
 
-      - name: Send Discord notification
+      - name: Send ESLint and Prettier notification to Discord
         if: always()
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          DEPLOY_URL: ${{ secrets.VERCEL_PROJECT_DOMAIN }}
         run: |
-          if [ -f eslint-results.sarif ]; then
-            MESSAGE="ESLint and Prettier check complete: ${{ github.repository }}\nCommit: ${{ github.sha }}\nBranch: ${{ github.ref_name }}\nView logs for more details."
-            curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
-          fi
+          MESSAGE="📝 **ESLint and Prettier Check Completed**\n\n"
+          MESSAGE+="**Repository**: ${{ github.repository }}\n"
+          MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
+          MESSAGE+="**Branch**: ${{ github.ref_name }}\n\n"
+          MESSAGE+="✅ **Build Succeeded**: Branch '${{ github.ref_name }}'\n"
+          MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
+          MESSAGE+="**Author**: ${{ github.actor }}\n\n"
+          MESSAGE+="**Deployed to Vercel**: 🌐 ${{ secrets.VERCEL_PROJECT_DOMAIN }}\n\n"
+          MESSAGE+="🔗 **View CI/CD Logs**: [GitHub Actions Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n"
+          
+          # Sending message to Discord
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
+

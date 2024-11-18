@@ -42,13 +42,15 @@ describe('Home Component Tests', () => {
   // Test: Basic Rendering
   it('renders the heading', () => {
     render(<Home />);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('CI/CD Dashboard');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'CI/CD Dashboard',
+    );
   });
 
   // Test: Loading State
   it('shows loading state when data is being fetched', async () => {
-    (global.fetch as jest.Mock).mockImplementation(() =>
-      new Promise(resolve => setTimeout(resolve, 100))
+    (global.fetch as jest.Mock).mockImplementation(
+      () => new Promise((resolve) => setTimeout(resolve, 100)),
     );
 
     render(<Home />);
@@ -62,7 +64,7 @@ describe('Home Component Tests', () => {
     (global.fetch as jest.Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve({ success: true, data: mockCIStatus }),
-      })
+      }),
     );
 
     render(<Home />);
@@ -72,14 +74,16 @@ describe('Home Component Tests', () => {
       expect(screen.getByText('Test')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('Success')).toHaveClass('bg-green-100 text-green-800');
+    expect(screen.getByText('Success')).toHaveClass(
+      'bg-green-100 text-green-800',
+    );
     expect(screen.getByText('Failure')).toHaveClass('bg-red-100 text-red-800');
   });
 
   // Test: Error Handling
   it('handles fetch errors gracefully', async () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.reject(new Error('Failed to fetch'))
+      Promise.reject(new Error('Failed to fetch')),
     );
 
     render(<Home />);
@@ -96,7 +100,7 @@ describe('Home Component Tests', () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() =>
       Promise.resolve({
         json: () => Promise.resolve({ success: true, data: mockCIStatus }),
-      })
+      }),
     );
 
     render(<Home />);
@@ -118,7 +122,7 @@ describe('Home Component Tests', () => {
     (global.fetch as jest.Mock).mockImplementationOnce(() =>
       Promise.resolve({
         json: () => Promise.resolve({ success: true, data: updatedMockData }),
-      })
+      }),
     );
 
     act(() => {
@@ -127,7 +131,9 @@ describe('Home Component Tests', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Deploy')).toBeInTheDocument();
-      expect(screen.getByText('Deployment completed successfully.')).toBeInTheDocument();
+      expect(
+        screen.getByText('Deployment completed successfully.'),
+      ).toBeInTheDocument();
     });
 
     jest.useRealTimers();
@@ -140,9 +146,17 @@ describe('Home Component Tests', () => {
         json: () =>
           Promise.resolve({
             success: true,
-            data: [{ _id: '1', stage: 'Build', status: null, logs: null, time: null }],
+            data: [
+              {
+                _id: '1',
+                stage: 'Build',
+                status: null,
+                logs: null,
+                time: null,
+              },
+            ],
           }),
-      })
+      }),
     );
 
     render(<Home />);
