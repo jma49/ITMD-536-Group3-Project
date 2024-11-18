@@ -10,6 +10,24 @@ type CIStatus = {
   time: string;
 };
 
+function formatLogLine(line: string, index: number) {
+  if (line.includes('Commit:')) {
+    return (
+      <p key={index} className="font-bold text-blue-600">
+        {line}
+      </p>
+    );
+  } else if (line.includes('Author:')) {
+    return (
+      <p key={index} className="italic text-purple-600">
+        {line}
+      </p>
+    );
+  } else {
+    return <p key={index}>{line}</p>;
+  }
+}
+
 export default function Home() {
   const [ciStatus, setCIStatus] = useState<CIStatus[]>([]);
 
@@ -54,7 +72,7 @@ export default function Home() {
         
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {ciStatus.length > 0 ? (
-            ciStatus.map((status) => (
+            ciStatus.slice(0, 9).map((status) => (
               <div
                 key={status._id}
                 className={`
@@ -87,8 +105,8 @@ export default function Home() {
                     <h3 className="text-sm font-medium text-gray-500 mb-2 font-space-mono">
                       Log Information:
                     </h3>
-                    <div className="bg-gray-50 rounded-md p-3 font-space-mono text-sm text-gray-600 break-words">
-                      {status.logs}
+                    <div className="bg-gray-50 rounded-md p-3 font-space-mono text-sm text-gray-600 break-words max-h-40 overflow-y-auto">
+                      {status.logs.split('\n').map(formatLogLine)}
                     </div>
                   </div>
                   
