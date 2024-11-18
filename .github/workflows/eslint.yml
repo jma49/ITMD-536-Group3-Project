@@ -31,10 +31,8 @@ jobs:
 
       - name: Install ESLint and Prettier
         run: |
-          npm install eslint@8.10.0
+          npm install eslint@latest --save-dev
           npm install @microsoft/eslint-formatter-sarif@3.1.0
-          npm install prettier eslint-plugin-prettier eslint-config-prettier --save-dev
-
       # Run Prettier auto-format
       # - name: Run Prettier auto-format
       #   run: |
@@ -59,7 +57,7 @@ jobs:
           wait-for-processing: true
 
       - name: Send ESLint and Prettier notification to Discord
-        if: failure()  # 只有在构建失败时发送失败通知
+        if: failure()  
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -80,7 +78,7 @@ jobs:
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
 
       - name: Send success notification to Discord
-        if: success()  # 只有在构建成功时发送成功通知
+        if: success() 
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
