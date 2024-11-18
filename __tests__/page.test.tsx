@@ -150,6 +150,9 @@ describe('Home Component Tests', () => {
     await waitFor(() => {
       expect(screen.getByText('Build')).toBeInTheDocument();
     });
+
+    expect(screen.queryByText('null')).not.toBeInTheDocument(); // Ensure null does not appear
+    expect(screen.getByText('Log Information:')).toBeInTheDocument(); // Ensure the section exists
   });
 
   // Snapshot Test

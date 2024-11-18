@@ -106,7 +106,7 @@ export default function Home() {
                       Log Information:
                     </h3>
                     <div className="bg-gray-50 rounded-md p-3 font-space-mono text-sm text-gray-600 break-words max-h-40 overflow-y-auto">
-                      {status.logs.split('\n').map(formatLogLine)}
+                      {(status.logs || '').split('\n').map(formatLogLine)}
                     </div>
                   </div>
                   
@@ -127,4 +127,3 @@ export default function Home() {
     </div>
   );
 }
-
