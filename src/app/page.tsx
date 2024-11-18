@@ -36,7 +36,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 text-center mb-8 font-space-mono">
           CI/CD Dashboard
         </h1>
         
@@ -54,7 +54,7 @@ export default function Home() {
               >
                 <div className="px-6 py-4 border-b border-gray-100">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-800">
+                    <h2 className="text-xl font-semibold text-gray-800 font-space-mono">
                       {status.stage}
                     </h2>
                     <span
@@ -72,10 +72,10 @@ export default function Home() {
 
                 <div className="px-6 py-4">
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-500 mb-2">
-                      log information
+                    <h3 className="text-sm font-medium text-gray-500 mb-2 font-space-mono">
+                      Log Information:
                     </h3>
-                    <div className="bg-gray-50 rounded-md p-3 font-mono text-sm text-gray-600 break-words">
+                    <div className="bg-gray-50 rounded-md p-3 font-space-mono text-sm text-gray-600 break-words">
                       {status.logs}
                     </div>
                   </div>
@@ -89,7 +89,7 @@ export default function Home() {
           ) : (
             <div className="col-span-full flex flex-col items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-              <p className="text-gray-500">加载中...</p>
+              <p className="text-gray-500 font-space-mono">Loading...</p>
             </div>
           )}
         </div>
