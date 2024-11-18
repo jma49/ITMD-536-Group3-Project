@@ -53,7 +53,7 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           DEPLOY_URL: ${{ secrets.VERCEL_PROJECT_DOMAIN }}
         run: |
-          MESSAGE="❌ **ESLint and Prettier Check Failed**\n\n"
+          MESSAGE="❌ **ESLint Check Failed**\n\n"
           MESSAGE+="**Repository**: ${{ github.repository }}\n"
           MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
           MESSAGE+="**Branch**: ${{ github.ref_name }}\n\n"
@@ -74,7 +74,7 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           DEPLOY_URL: ${{ secrets.VERCEL_PROJECT_DOMAIN }}
         run: |
-          MESSAGE="✅ **Build Succeeded**: Branch '${{ github.ref_name }}'\n\n"
+          MESSAGE="✅ **ESLint Check Succeeded**: Branch '${{ github.ref_name }}'\n\n"
           MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
           MESSAGE+="**Author**: ${{ github.actor }}\n\n"
           MESSAGE+="🌐 **Deployed to Vercel**: [${{ secrets.VERCEL_PROJECT_DOMAIN }}](https://${{ secrets.VERCEL_PROJECT_DOMAIN }})\n"
