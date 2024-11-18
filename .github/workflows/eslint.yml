@@ -35,11 +35,12 @@ jobs:
           npm install @microsoft/eslint-formatter-sarif@3.1.0
           npm install prettier eslint-plugin-prettier eslint-config-prettier --save-dev
 
+      # Run Prettier auto-format
       - name: Run Prettier auto-format
         run: |
-          npx prettier --check "**/*.{js,jsx,ts,tsx,json,md}"
-        continue-on-error: True  # 如果不希望在有格式化问题时失败，可以设置为 true，但最好保持为 false 确保格式问题修复
-
+          npx prettier --write "**/*.{js,jsx,ts,tsx,json,md}"
+      
+      # Run ESLint with Prettier integrated
       - name: Run ESLint with Prettier integrated
         env:
           SARIF_ESLINT_IGNORE_SUPPRESSED: "true"
@@ -49,7 +50,7 @@ jobs:
           --ext .js,.jsx,.ts,.tsx \
           --format @microsoft/eslint-formatter-sarif \
           --output-file eslint-results.sarif
-        continue-on-error: true
+        continue-on-error: false  # 确保如果 ESLint 检查失败，整个构建失败
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v3
@@ -58,7 +59,7 @@ jobs:
           wait-for-processing: true
 
       - name: Send ESLint and Prettier notification to Discord
-        if: always()
+        if: failure()  # 只有在构建失败时发送失败通知
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR: ${{ github.actor }}
@@ -68,16 +69,32 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
           DEPLOY_URL: ${{ secrets.VERCEL_PROJECT_DOMAIN }}
         run: |
-          MESSAGE="📝 **ESLint and Prettier Check Completed**\n\n"
+          MESSAGE="❌ **ESLint and Prettier Check Failed**\n\n"
           MESSAGE+="**Repository**: ${{ github.repository }}\n"
           MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
           MESSAGE+="**Branch**: ${{ github.ref_name }}\n\n"
-          MESSAGE+="✅ **Build Succeeded**: Branch '${{ github.ref_name }}'\n"
-          MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
-          MESSAGE+="**Author**: ${{ github.actor }}\n\n"
-          MESSAGE+="**Deployed to Vercel**: 🌐 ${{ secrets.VERCEL_PROJECT_DOMAIN }}\n\n"
+          MESSAGE+="🚨 **Build Failed**: Please check the logs for more details.\n"
           MESSAGE+="🔗 **View CI/CD Logs**: [GitHub Actions Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n"
           
-          # Sending message to Discord
+          # Sending failure message to Discord
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
 
+      - name: Send success notification to Discord
+        if: success()  # 只有在构建成功时发送成功通知
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          DEPLOY_URL: ${{ secrets.VERCEL_PROJECT_DOMAIN }}
+        run: |
+          MESSAGE="✅ **Build Succeeded**: Branch '${{ github.ref_name }}'\n\n"
+          MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
+          MESSAGE+="**Author**: ${{ github.actor }}\n\n"
+          MESSAGE+="🌐 **Deployed to Vercel**: [${{ secrets.VERCEL_PROJECT_DOMAIN }}](${ secrets.VERCEL_PROJECT_DOMAIN })\n"
+          MESSAGE+="🔗 **View CI/CD Logs**: [GitHub Actions Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n"
+          
+          # Sending success message to Discord
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
