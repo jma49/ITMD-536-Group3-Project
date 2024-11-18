@@ -36,6 +36,18 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
         run: npm run build
 
+      # # Pull Vercel environment information
+      # - name: Pull Vercel Environment Information
+      #   run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      # # Build Vercel artifacts
+      # - name: Build Project Artifacts
+      #   run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      # # Deploy Project Artifacts to Vercel
+      # - name: Deploy to Vercel
+      #   run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
       # Notify Discord and API on build failure
       - name: Send failure notification on error
         if: failure()
@@ -43,14 +55,8 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           API_KEY: ${{ secrets.API_KEY }}
         run: |
-          MESSAGE="🚨 **Build Failed**: Branch '${{ github.ref_name }}'\n\n"
-          MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
-          MESSAGE+="**Author**: ${{ github.actor }}\n\n"
-          MESSAGE+="📄 **Check logs for details**: [GitHub Actions Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-          
-          # Send to Discord
+          MESSAGE="🚨 Build Failed: Branch '${{ github.ref_name }}'\nCommit: ${{ github.sha }}'\nAuthor: ${{ github.actor }}\n\nCheck logs for details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
-          # Send to API
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "x-api-key: $API_KEY" \
@@ -63,15 +69,8 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           API_KEY: ${{ secrets.API_KEY }}
         run: |
-          MESSAGE="✅ **Build Succeeded**: Branch '${{ github.ref_name }}'\n\n"
-          MESSAGE+="**Commit**: \`${{ github.sha }}\`\n"
-          MESSAGE+="**Author**: ${{ github.actor }}\n\n"
-          MESSAGE+="🌐 **Deployed to Vercel**: [${{ secrets.VERCEL_PROJECT_DOMAIN }}](${ secrets.VERCEL_PROJECT_DOMAIN })\n"
-          MESSAGE+="🔗 **View CI/CD Logs**: [GitHub Actions Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-          
-          # Send to Discord
+          MESSAGE="✅ Build Succeeded: Branch '${{ github.ref_name }}'\nCommit: ${{ github.sha }}'\nAuthor: ${{ github.actor }}\n\nDeployed to Vercel: ${{ secrets.VERCEL_PROJECT_DOMAIN }}\n\nView CI/CD Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MESSAGE\"}" $DISCORD_WEBHOOK_URL
-          # Send to API
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "x-api-key: $API_KEY" \

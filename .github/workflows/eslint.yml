@@ -36,9 +36,9 @@ jobs:
           npm install prettier eslint-plugin-prettier eslint-config-prettier --save-dev
 
       # Run Prettier auto-format
-      - name: Run Prettier auto-format
-        run: |
-          npx prettier --write "**/*.{js,jsx,ts,tsx,json,md}"
+      # - name: Run Prettier auto-format
+      #   run: |
+      #     npx prettier --write "**/*.{js,jsx,ts,tsx,json,md}"
       
       # Run ESLint with Prettier integrated
       - name: Run ESLint with Prettier integrated
