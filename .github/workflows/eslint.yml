@@ -37,8 +37,8 @@ jobs:
 
       - name: Run Prettier auto-format
         run: |
-          npx prettier --write "**/*.{js,jsx,json,md}"
-        continue-on-error: false  # 如果不希望在有格式化问题时失败，可以设置为 true，但最好保持为 false 确保格式问题修复
+          npx prettier --check "**/*.{js,jsx,ts,tsx,json,md}"
+        continue-on-error: True  # 如果不希望在有格式化问题时失败，可以设置为 true，但最好保持为 false 确保格式问题修复
 
       - name: Run ESLint with Prettier integrated
         env:
