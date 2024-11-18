@@ -16,6 +16,8 @@ const CIStatusSchema: Schema = new Schema({
   time: { type: Date, default: Date.now },
 });
 
-const CIStatus: Model<ICIStatus> = mongoose.models.CIStatus || mongoose.model<ICIStatus>('CIStatus', CIStatusSchema);
+const CIStatus: Model<ICIStatus> =
+  mongoose.models.CIStatus ||
+  mongoose.model<ICIStatus>('CIStatus', CIStatusSchema);
 
 export default CIStatus;

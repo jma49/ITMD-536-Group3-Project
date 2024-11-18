@@ -38,9 +38,9 @@ export default function Home() {
       if (!response || typeof response.json !== 'function') {
         throw new Error('Invalid response format');
       }
-  
+
       const data = await response.json();
-  
+
       // Validate the data structure before setting state
       if (data && data.success && Array.isArray(data.data)) {
         setCIStatus(data.data);
@@ -69,7 +69,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold text-gray-900 text-center mb-8 font-space-mono">
           CI/CD Dashboard
         </h1>
-        
+
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {ciStatus.length > 0 ? (
             ciStatus.slice(0, 9).map((status) => (
@@ -77,9 +77,11 @@ export default function Home() {
                 key={status._id}
                 className={`
                   overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl
-                  ${status.status === 'Success' 
-                    ? 'bg-white border-t-4 border-green-500' 
-                    : 'bg-white border-t-4 border-red-500'}
+                  ${
+                    status.status === 'Success'
+                      ? 'bg-white border-t-4 border-green-500'
+                      : 'bg-white border-t-4 border-red-500'
+                  }
                 `}
               >
                 <div className="px-6 py-4 border-b border-gray-100">
@@ -90,9 +92,11 @@ export default function Home() {
                     <span
                       className={`
                         px-3 py-1 rounded-full text-sm font-medium
-                        ${status.status === 'Success'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'}
+                        ${
+                          status.status === 'Success'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                        }
                       `}
                     >
                       {status.status}
@@ -109,7 +113,7 @@ export default function Home() {
                       {(status.logs || '').split('\n').map(formatLogLine)}
                     </div>
                   </div>
-                  
+
                   <div className="text-right text-sm text-gray-500">
                     {new Date(status.time).toLocaleString()}
                   </div>
