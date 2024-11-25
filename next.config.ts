@@ -1,9 +1,19 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Next.js configuration options
   env: {
-    API_KEY: process.env.API_KEY, // 显式声明环境变量
+    API_KEY: process.env.API_KEY, // Explicitly declare environment variable
+  },
+  webpack: (config, { isServer }) => {
+    // Exclude Cypress test files from client-side builds
+    if (!isServer) {
+      config.module.rules.push({
+        test: /\.cy\.(js|ts|tsx)$/, // Match Cypress test file extensions
+        use: 'ignore-loader', // Use ignore-loader to skip these files
+      });
+    }
+    return config; // Return the modified config
   },
 };
 
