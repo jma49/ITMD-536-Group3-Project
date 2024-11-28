@@ -4,6 +4,26 @@ This repository implements a Next.js application with a fully automated CI/CD pi
 
 ---
 
+## Table of Contents
+1. [Features](#features)
+2. [Getting Started](#getting-started)
+3. [Commands](#commands)
+4. [Workflows Overview](#workflows-overview)
+   - [CICD Pipeline](#cicd-pipeline)
+   - [ESLint](#eslint)
+   - [CodeQL Analysis](#codeql-analysis)
+   - [End-to-End Testing (Cypress)](#end-to-end-testing-cypress)
+5. [Secrets and Environment Variables](#secrets-and-environment-variables)
+6. [Notifications](#notifications)
+7. [Deployment](#deployment)
+8. [Debugging CI/CD Failures](#debugging-cicd-failures)
+9. [Learn More](#learn-more)
+10. [Contributing](#contributing)
+11. [License](#license)
+12. [Contact](#contact)
+
+---
+
 ## Features
 
 - **Next.js Framework**: React-based framework optimized for server-side rendering and static site generation.
@@ -70,7 +90,7 @@ You can edit the main page in `app/page.tsx`. Changes are applied automatically.
 
 ## Workflows Overview
 
-### CI/CD Pipeline
+### CICD Pipeline
 
 #### Trigger
 - Push to the `main` branch.
@@ -129,6 +149,38 @@ You can edit the main page in `app/page.tsx`. Changes are applied automatically.
 
 ---
 
+## Secrets and Environment Variables
+
+To ensure smooth operation, configure the following secrets and environment variables in your GitHub Actions settings:
+
+### Configuring Secrets in GitHub
+
+1. **Navigate to Repository Settings**:
+   - Go to the GitHub repository.
+   - Click **Settings** > **Secrets and variables** > **Actions** > **New repository secret**.
+
+2. **Add the Following Secrets**:
+   - `API_KEY`:
+     - **Description**: Your GitHub API key, required for accessing private repositories or interacting with GitHub APIs in workflows.
+     - **Value**: Your GitHub Personal Access Token (PAT).
+   - `MONGDB_URI`:
+     - **Description**: MongoDB connection string for database access.
+     - **Format**:
+       ```plaintext
+       mongodb+srv://<username>:<password>@cluster.mongodb.net/<database>?retryWrites=true&w=majority
+       ```
+       Replace `<username>`, `<password>`, and `<database>` with your MongoDB credentials.
+
+3. **Verify Setup**:
+   - Check the workflow `.yml` files to ensure the secrets are referenced correctly. For example:
+     ```yaml
+     env:
+       API_KEY: ${{ secrets.API_KEY }}
+       MONGDB_URI: ${{ secrets.MONGDB_URI }}
+     ```
+
+---
+
 ## Notifications
 
 Discord notifications are integrated across workflows:
@@ -163,33 +215,24 @@ For more information, refer to the [Next.js Deployment Documentation](https://ne
 
 ---
 
-## Configuration
+## Debugging CI/CD Failures
 
-### Secrets
+### Common Errors and Solutions
+1. **Build Failed**:
+   - **Reason**: Missing dependencies.
+   - **Solution**: Ensure `npm install` is included in the workflow.
 
-To ensure smooth operation, configure the following secrets in your GitHub repository:
+2. **Linting Issues**:
+   - **Reason**: Code does not follow ESLint rules.
+   - **Solution**: Run `npm run lint` locally and fix the reported issues.
 
-1. **Navigate to Repository Settings**:
-   - Go to the GitHub repository.
-   - Click on **Settings** > **Secrets and variables** > **Actions** > **New repository secret**.
+3. **Deployment Errors**:
+   - **Reason**: Vercel token or domain not configured.
+   - **Solution**: Check if `VERCEL_TOKEN` and `VERCEL_PROJECT_DOMAIN` secrets are correctly set.
 
-2. **Add the Following Secrets**:
-   - `API_KEY`: The API key for external services.
-   - `MONGDB_URI`: The MongoDB connection string for database access.
-   - `DISCORD_WEBHOOK_URL`: Webhook URL for Discord notifications.
-   - `VERCEL_PROJECT_DOMAIN`: Domain name of your Vercel project.
-   - `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`: Vercel organization and project IDs.
-   - `VERCEL_TOKEN`: Token for Vercel deployments (optional if using the `vercel` CLI).
-
-3. **Example Setup for `MONGDB_URI`**:
-   - The MongoDB connection string should be in the following format:
-     ```plaintext
-     mongodb+srv://<username>:<password>@cluster.mongodb.net/<database>?retryWrites=true&w=majority
-     ```
-   - Replace `<username>`, `<password>`, and `<database>` with your actual MongoDB credentials.
-
-4. **Example Setup for `API_KEY`**:
-   - Ensure the external service or API provides the necessary key, and paste it as the value of the `API_KEY` secret.
+4. **Database Connection Fails**:
+   - **Reason**: Incorrect `MONGDB_URI` configuration.
+   - **Solution**: Test the connection string locally before adding it to secrets.
 
 ---
 
