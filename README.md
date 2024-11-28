@@ -1,40 +1,39 @@
+# Continuous Integration and Code Quality Automation
+
+This repository implements a Next.js application with a fully automated CI/CD pipeline. It integrates tools like ESLint, Prettier, CodeQL, and Vercel for deployment, ensuring code quality, security, and maintainability.
 
 ---
 
-# **Continuous Integration and Code Quality Automation**
+## Features
 
-This repository implements a **Next.js** application with a fully automated CI/CD pipeline. It integrates tools like ESLint, Prettier, CodeQL, and Vercel for deployment, ensuring code quality, security, and maintainability.
-
----
-
-## **Features**
-- **Next.js Framework**: A React-based framework optimized for server-side rendering and static site generation.
+- **Next.js Framework**: React-based framework optimized for server-side rendering and static site generation.
 - **CI/CD Integration**: Automatically builds, tests, and deploys the application.
-- **Code Quality**:
-  - **ESLint**: Ensures coding standards are met.
-  - **Prettier**: Formats code for readability.
+- **Code Quality Tools**:
+  - **ESLint**: Enforces coding standards.
+  - **Prettier**: Formats code for better readability.
   - **CodeQL**: Performs security scans to detect vulnerabilities.
-- **Notifications**: Build, lint, and analysis results are sent to a Discord channel for real-time updates.
-- **Deployment**: Automatically deploys the application to **Vercel**.
+- **End-to-End Testing**: Uses Cypress for comprehensive UI and application flow testing.
+- **Notifications**: Real-time updates on build, lint, and analysis results via Discord.
+- **Deployment**: Automated deployment to Vercel.
 
 ---
 
-## **Getting Started**
+## Getting Started
 
-### **1. Clone the Repository**
+### Clone the Repository
 ```bash
 git clone https://github.com/username/repository.git
 cd repository
 ```
 
-### **2. Install Dependencies**
+### Install Dependencies
 Ensure you have Node.js (v18.18.0 or later) installed, then run:
 ```bash
 npm install
 ```
 
-### **3. Run the Development Server**
-Start the local development server:
+### Run the Development Server
+Start the server locally:
 ```bash
 npm run dev
 # or
@@ -42,161 +41,200 @@ yarn dev
 # or
 pnpm dev
 ```
+Visit [http://localhost:3000](http://localhost:3000) to view the application.
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
+You can edit the main page in `app/page.tsx`. Changes are applied automatically.
 
-You can edit the main page in `app/page.tsx`. The application will auto-update as you save changes.
+---
 
-### **4. Additional Commands**
+## Commands
+
 - **Run ESLint**: Check for linting errors.
   ```bash
   npm run lint
   ```
-- **Run Tests**: Ensure application integrity.
+- **Run Unit Tests**: Verify application integrity.
   ```bash
   npm run test
   ```
-- **Build Application**: Generate a production build.
+- **Run End-to-End Tests**: Use Cypress to test application flow.
+  ```bash
+  npm run e2e
+  ```
+- **Build for Production**: Generate a production build.
   ```bash
   npm run build
   ```
 
 ---
 
-## **Workflows Overview**
+## Workflows Overview
 
-### **1. CI/CD Pipeline**
-This workflow handles the building, testing, and deployment of the application.
+### CI/CD Pipeline
 
-#### **Trigger**
+#### Trigger
 - Push to the `main` branch.
 
-#### **Steps**
-1. **Code Checkout**: Clones the repository.
-2. **Install Dependencies**: Installs project requirements.
-3. **Run Tests**: Executes unit tests.
-4. **Build and Deploy**: Deploys the application to **Vercel**.
-5. **Discord Notifications**:
-   - On failure: Sends an error message with a link to the logs.
-   - On success: Confirms successful deployment and provides a link to the deployed site.
+#### Steps
+1. Clone the repository.
+2. Install dependencies.
+3. Run unit tests.
+4. Execute Cypress end-to-end tests.
+5. Build and deploy to Vercel.
 
-### **2. ESLint**
-This workflow ensures coding standards and consistent formatting.
-
-#### **Trigger**
-- Push or pull requests to the `main` branch.
-- Scheduled to run weekly on Fridays.
-
-#### **Steps**
-1. Installs ESLint and Prettier dependencies.
-2. Runs linting and formatting checks.
-3. Uploads results as SARIF to GitHub Code Scanning.
-4. Sends Discord notifications with results.
-
-### **3. CodeQL Analysis**
-This workflow performs static analysis to detect vulnerabilities in the codebase.
-
-#### **Trigger**
-- Push or pull requests to the `main` branch.
-- Scheduled to run weekly on Wednesdays.
-
-#### **Steps**
-1. Initializes CodeQL for the specified language (e.g., JavaScript/TypeScript).
-2. Runs CodeQL analysis to detect security vulnerabilities.
-3. Uploads results to GitHub Code Scanning Alerts.
-4. Sends Discord notifications with analysis results.
+#### Notifications
+- **On Failure**: Error details with a link to logs.
+- **On Success**: Deployment confirmation with a link to the deployed site.
 
 ---
 
-## **Notifications**
+### ESLint
 
-Discord notifications are integrated into each workflow:
-- **Failure**: Sends an error message with:
+#### Trigger
+- Push or pull requests to `main`.
+- Weekly schedule on Fridays.
+
+#### Steps
+1. Install ESLint and Prettier.
+2. Perform linting and formatting checks.
+3. Upload results as SARIF to GitHub Code Scanning.
+4. Notify via Discord.
+
+---
+
+### CodeQL Analysis
+
+#### Trigger
+- Push or pull requests to `main`.
+- Weekly schedule on Wednesdays.
+
+#### Steps
+1. Initialize CodeQL for JavaScript/TypeScript.
+2. Run security analysis.
+3. Upload alerts to GitHub Code Scanning.
+4. Notify via Discord.
+
+---
+
+### End-to-End Testing (Cypress)
+
+#### Trigger
+- Push or pull requests to `main`.
+
+#### Steps
+1. Install Cypress.
+2. Run Cypress tests.
+3. Upload results to GitHub Actions.
+4. Notify via Discord.
+
+---
+
+## Notifications
+
+Discord notifications are integrated across workflows:
+
+- **Failure**:
   - Repository name
   - Branch
   - Commit hash
   - Author
-  - Link to CI/CD logs
-- **Success**: Confirms successful execution with:
+  - Link to logs
+- **Success**:
   - Repository name
   - Branch
   - Commit hash
   - Author
-  - Link to deployment or logs
+  - Link to deployment/logs
 
-To configure notifications, set up the `DISCORD_WEBHOOK_URL` as a secret in the repository settings.
+Set the `DISCORD_WEBHOOK_URL` secret in the repository to enable notifications.
 
 ---
 
-## **Deployment**
+## Deployment
 
-This project is deployed on **Vercel**, a platform optimized for serverless Next.js applications.
+### Automatic Deployment
+Pushing to `main` triggers the CI/CD pipeline to build and deploy the application to Vercel.
 
-### **Automatic Deployment**
-Pushing to the `main` branch triggers the CI/CD workflow, which builds and deploys the application to Vercel.
-
-### **Manual Deployment**
-To manually deploy, run the following command:
+### Manual Deployment
 ```bash
 vercel --prod
 ```
-
-For more details, refer to the [Next.js Deployment Documentation](https://nextjs.org/docs/app/building-your-application/deploying).
-
----
-
-## **Configuration**
-
-### **Secrets**
-Ensure the following secrets are configured in your repository:
-- `DISCORD_WEBHOOK_URL`: Webhook URL for Discord notifications.
-- `VERCEL_PROJECT_DOMAIN`: Domain name of your Vercel project.
-- `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`: Vercel organization and project identifiers.
-- `VERCEL_TOKEN`: Token for Vercel deployments (optional if using `vercel` CLI).
+For more information, refer to the [Next.js Deployment Documentation](https://nextjs.org/docs).
 
 ---
 
-## **Learn More**
+## Configuration
 
-To dive deeper into the tools and technologies used:
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
-- [ESLint Documentation](https://eslint.org/docs/latest/) - Understand linting rules and configurations.
-- [CodeQL Documentation](https://docs.github.com/en/code-security/code-scanning/using-codeql-code-scanning) - Learn about CodeQL security analysis.
-- [Vercel Documentation](https://vercel.com/docs) - Get started with Vercel deployments.
+### Secrets
+
+To ensure smooth operation, configure the following secrets in your GitHub repository:
+
+1. **Navigate to Repository Settings**:
+   - Go to the GitHub repository.
+   - Click on **Settings** > **Secrets and variables** > **Actions** > **New repository secret**.
+
+2. **Add the Following Secrets**:
+   - `API_KEY`: The API key for external services.
+   - `MONGDB_URI`: The MongoDB connection string for database access.
+   - `DISCORD_WEBHOOK_URL`: Webhook URL for Discord notifications.
+   - `VERCEL_PROJECT_DOMAIN`: Domain name of your Vercel project.
+   - `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`: Vercel organization and project IDs.
+   - `VERCEL_TOKEN`: Token for Vercel deployments (optional if using the `vercel` CLI).
+
+3. **Example Setup for `MONGDB_URI`**:
+   - The MongoDB connection string should be in the following format:
+     ```plaintext
+     mongodb+srv://<username>:<password>@cluster.mongodb.net/<database>?retryWrites=true&w=majority
+     ```
+   - Replace `<username>`, `<password>`, and `<database>` with your actual MongoDB credentials.
+
+4. **Example Setup for `API_KEY`**:
+   - Ensure the external service or API provides the necessary key, and paste it as the value of the `API_KEY` secret.
 
 ---
 
-## **Contributing**
+## Learn More
 
-We welcome contributions to improve this project. To contribute:
+Explore the tools and documentation:
+- [Next.js Documentation](https://nextjs.org/docs)
+- [ESLint Documentation](https://eslint.org/docs/latest/)
+- [CodeQL Documentation](https://codeql.github.com/docs/)
+- [Cypress Documentation](https://docs.cypress.io)
+- [Vercel Documentation](https://vercel.com/docs)
+
+---
+
+## Contributing
+
+Contributions are welcome. To contribute:
+
 1. Fork the repository.
-2. Create a new branch for your feature or fix:
+2. Create a branch:
    ```bash
    git checkout -b feature/your-feature
    ```
-3. Commit your changes with a clear message:
+3. Commit changes:
    ```bash
-   git commit -m "Add your feature or fix description"
+   git commit -m "Description of feature or fix"
    ```
-4. Push your branch and create a pull request:
+4. Push and open a pull request:
    ```bash
    git push origin feature/your-feature
    ```
 
 ---
 
-## **License**
+## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License.
 
 ---
 
-## **Contact**
+## Contact
 
-For questions or feedback, contact the repository maintainer:
+For questions or feedback, contact:
+
 - **Name**: Jincheng Ma
 - **Email**: jma49@hawk.iit.edu
-- **GitHub**: https://github.com/jma49/ITMD-536-Group3-Project
-
----
-
+- **GitHub**: [https://github.com/jma49/ITMD-536-Group3-Project](https://github.com/jma49/ITMD-536-Group3-Project)
+```
