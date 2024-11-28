@@ -237,4 +237,3 @@ For questions or feedback, contact:
 - **Name**: Jincheng Ma
 - **Email**: jma49@hawk.iit.edu
 - **GitHub**: [https://github.com/jma49/ITMD-536-Group3-Project](https://github.com/jma49/ITMD-536-Group3-Project)
-```
