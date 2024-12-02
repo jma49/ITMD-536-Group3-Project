@@ -1,0 +1,34 @@
+out
+
+# Test-related files
+__tests__
+cypress/
+
+# Local development files
+.vscode
+.eslintignore
+.eslintrc.json
+jest.config.ts
+jest.setup.ts
+cypress.config.js
+
+# Logs and temporary files
+npm-debug.log*
+yarn-debug.log*
+*.log
+
+# Git and version control
+.git
+.gitignore
+.github
+
+# Ignore sensitive environment files except for .env.local
+.env
+!.env.local
+
+# Ignore other files and folders
+node_modules
+.next
+.vscode
+*.log
+.git
