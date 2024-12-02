@@ -1,20 +1,23 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Next.js configuration options
-  env: {
-    API_KEY: process.env.API_KEY, // Explicitly declare environment variable
-  },
-  webpack: (config, { isServer }) => {
-    // Exclude Cypress test files from client-side builds
-    if (!isServer) {
-      config.module.rules.push({
-        test: /\.cy\.(js|ts|tsx)$/, // Match Cypress test file extensions
-        use: 'ignore-loader', // Use ignore-loader to skip these files
-      });
-    }
-    return config; // Return the modified config
-  },
+	// Define public environment variables accessible in the browser
+	env: {
+		API_KEY: process.env.API_KEY, // Pass API_KEY to the client side if needed
+		MONGODB_URI: process.env.MONGODB_URI, // Pass MONGODB_URI for server-side use
+	},
+
+	webpack: (config, { isServer }) => {
+		if (!isServer) {
+			config.module.rules.push({
+				test: /\.cy\.(js|ts|tsx)$/,
+				loader: "ignore-loader",
+			});
+		}
+		return config;
+	},
+
+	reactStrictMode: true,
 };
 
 export default nextConfig;
